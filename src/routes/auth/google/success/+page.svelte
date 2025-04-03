@@ -30,24 +30,23 @@
                 throw new Error('Error al guardar tokens');
             }
 
-            const data = await response.json();
-            console.log("✅ Tokens guardados correctamente:", data);
-
-            // ⚠️ Agregamos un pequeño delay para que las cookies se propaguen
-            setTimeout(() => {
-                if (data.role === 'doctor') {
-                    goto('/dashboard/doctor');
-                } else if (data.role === 'patient') {
-                    goto('/dashboard/patient');
-                } else if (data.role === 'admin') {
-                    goto('/admin');
-                } else {
-                    goto('/');
-                }
-            }, 800); // Aumentamos el delay un poco
+            // La respuesta será una redirección, así que seguimos la redirección
+            const redirectUrl = response.headers.get('Location');
+            if (redirectUrl) {
+                window.location.href = redirectUrl;
+            } else {
+                throw new Error('No se recibió URL de redirección');
+            }
         } catch (error) {
             console.error('❌ Error:', error);
             goto('/login?error=process_failed');
         }
     });
 </script>
+
+<div class="flex min-h-screen items-center justify-center">
+    <div class="text-center">
+        <h2 class="text-xl font-semibold mb-4">Procesando inicio de sesión...</h2>
+        <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500 mx-auto"></div>
+    </div>
+</div>

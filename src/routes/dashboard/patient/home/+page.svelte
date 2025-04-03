@@ -9,31 +9,31 @@
     const { patient, appointments } = data;
     
     interface Appointment {
-        id_pc?: string;
-        patient_id?: string;
-        patientId?: string;
-        status?: string;
-        appointment_date?: string;
-        date?: string;
-        time?: string;
-        notes?: string;
+        appointment_id: number;
+        patient_id: number;
+        id_pc: number;
+        status: string;
+        patient_name: string;
+        doctor_name: string;
+        appointment_date: string;
+        appointment_time: string;
     }
 
     let selectedDate: Date | null = null;
     let selectedDateAppointments: Appointment[] = [];
     
     // Función para manejar la selección de un día en el calendario
-    function handleDaySelect(event: CustomEvent<{ date: Date }>) {
+    function handleDaySelect(event: CustomEvent<{ date: Date; hasAppointment: boolean; isPast: boolean }>) {
       selectedDate = event.detail.date;
       
       // Filtrar citas para el día seleccionado
       selectedDateAppointments = selectedDate
         ? appointments.all.filter(appointment => {
-            const appointmentDate = new Date(appointment.appointment_date || '');
+            const appointmentDate = new Date(appointment.appointment_date);
             return (
-              appointmentDate.getDate() === selectedDate.getDate() &&
-              appointmentDate.getMonth() === selectedDate.getMonth() &&
-              appointmentDate.getFullYear() === selectedDate.getFullYear()
+              appointmentDate.getDate() === selectedDate!.getDate() &&
+              appointmentDate.getMonth() === selectedDate!.getMonth() &&
+              appointmentDate.getFullYear() === selectedDate!.getFullYear()
             );
           })
         : [];
@@ -41,15 +41,17 @@
     
     // Obtener la próxima cita pendiente (para el recordatorio)
     $: nextAppointment = appointments.pending.length > 0 
-      ? appointments.pending.sort((a, b) => {
-          const dateA = new Date(a.date || a.appointment_date);
-          const dateB = new Date(b.date || b.appointment_date);
-          return dateA.getTime() - dateB.getTime();
-        })[0]
+      ? appointments.pending
+          .filter(app => new Date(app.appointment_date) >= new Date()) // Filtrar citas pasadas
+          .sort((a, b) => {
+              const dateA = new Date(a.appointment_date);
+              const dateB = new Date(b.appointment_date);
+              return dateA.getTime() - dateB.getTime();
+          })[0]
       : null;
       
     // Calcular días para la próxima cita
-    $: daysUntilNext = nextAppointment ? Math.ceil((new Date(nextAppointment.date || nextAppointment.appointment_date).getTime() - new Date().getTime()) / (1000 * 60 * 60 * 24)) : null;
+    $: daysUntilNext = nextAppointment ? Math.ceil((new Date(nextAppointment.appointment_date).getTime() - new Date().getTime()) / (1000 * 60 * 60 * 24)) : null;
   </script>
   
   <div class="p-4 bg-blue-50 rounded-lg border-2 border-blue-200">
@@ -63,13 +65,35 @@
               {#if appointments.all.length > 0}
                   <ul class="space-y-2">
                       {#each appointments.all.slice(0, 5) as appointment}
-                          <li class="p-2 rounded {appointment.status === 'pending' ? 'bg-yellow-50 border-l-4 border-yellow-400' : appointment.status === 'completed' ? 'bg-green-50 border-l-4 border-green-400' : 'bg-gray-50 border-l-4 border-gray-400'}">
+                          <li class="p-2 rounded {
+                              new Date(appointment.appointment_date) < new Date() 
+                                ? 'bg-gray-100 border-l-4 border-gray-400' 
+                                : appointment.status === 'pending' 
+                                  ? 'bg-yellow-50 border-l-4 border-yellow-400' 
+                                  : appointment.status === 'completed' 
+                                    ? 'bg-green-50 border-l-4 border-green-400' 
+                                    : 'bg-gray-50 border-l-4 border-gray-400'
+                          }">
                               <div class="text-sm font-medium">
-                                  {format(new Date(appointment.date || appointment.appointment_date), 'PPP', { locale: es })}
+                                  {format(new Date(appointment.appointment_date), 'PPP', { locale: es })}
                               </div>
                               <div class="text-xs text-gray-600">
-                                  Estado: <span class="font-semibold {appointment.status === 'pending' ? 'text-yellow-600' : appointment.status === 'completed' ? 'text-green-600' : 'text-gray-600'}">
-                                      {appointment.status === 'pending' ? 'Pendiente' : appointment.status === 'completed' ? 'Completada' : 'Cancelada'}
+                                  Estado: <span class="font-semibold {
+                                      new Date(appointment.appointment_date) < new Date()
+                                        ? 'text-gray-600'
+                                        : appointment.status === 'pending' 
+                                          ? 'text-yellow-600' 
+                                          : appointment.status === 'completed' 
+                                            ? 'text-green-600' 
+                                            : 'text-gray-600'
+                                  }">
+                                      {new Date(appointment.appointment_date) < new Date()
+                                        ? 'Pasada'
+                                        : appointment.status === 'pending' 
+                                          ? 'Pendiente' 
+                                          : appointment.status === 'completed' 
+                                            ? 'Completada' 
+                                            : 'Cancelada'}
                                   </span>
                               </div>
                           </li>
@@ -103,10 +127,20 @@
                       {#if selectedDateAppointments.length > 0}
                           <ul class="mt-1 space-y-1">
                               {#each selectedDateAppointments as appointment}
-                                  <li class="text-sm {appointment.status === 'pending' ? 'text-yellow-700' : 'text-green-700'}">
-                                      {appointment.status === 'pending' ? 'Cita pendiente' : 'Cita completada'}
-                                      {#if appointment.time}
-                                          a las {appointment.time}
+                                  <li class="text-sm {
+                                      new Date(appointment.appointment_date) < new Date()
+                                        ? 'text-gray-700'
+                                        : appointment.status === 'pending' 
+                                          ? 'text-yellow-700' 
+                                          : 'text-green-700'
+                                  }">
+                                      {new Date(appointment.appointment_date) < new Date()
+                                        ? 'Cita pasada'
+                                        : appointment.status === 'pending' 
+                                          ? 'Cita pendiente' 
+                                          : 'Cita completada'}
+                                      {#if appointment.appointment_time}
+                                          a las {appointment.appointment_time}
                                       {/if}
                                   </li>
                               {/each}
@@ -129,16 +163,11 @@
                            `Faltan ${daysUntilNext} días para tu cita`}
                       </p>
                       <p class="text-sm text-gray-600 mt-1">
-                          Fecha: {format(new Date(nextAppointment.date || nextAppointment.appointment_date), 'PPP', { locale: es })}
+                          Fecha: {format(new Date(nextAppointment.appointment_date), 'PPP', { locale: es })}
                       </p>
-                      {#if nextAppointment.time}
+                      {#if nextAppointment.appointment_time}
                           <p class="text-sm text-gray-600">
-                              Hora: {nextAppointment.time}
-                          </p>
-                      {/if}
-                      {#if nextAppointment.notes}
-                          <p class="text-sm text-gray-600 mt-1 italic">
-                              "{nextAppointment.notes}"
+                              Hora: {nextAppointment.appointment_time}
                           </p>
                       {/if}
                   </div>

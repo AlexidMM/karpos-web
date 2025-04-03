@@ -9,6 +9,8 @@
     // Extraer doctores y pacientes de los datos cargados por el servidor
     $: doctors = data.doctors || [];
     $: patients = data.patients || [];
+    $: appointments = data.appointments || [];
+    $: iotData = data.iotData || [];
     
     // Estado para controlar qué pestaña de reporte está activa
     let activeReportTab = 'paciente';
@@ -38,12 +40,15 @@
             
             if (activeReportTab === 'paciente') {
                 if (patientId !== 'all') params.append('patientId', patientId);
-                endpoint = '/dashboard/doctor/reportes/pacientes/generate';
+                endpoint = '/dashboard/doctor/reportes/iot/generate';
             } else if (activeReportTab === 'cita') {
                 if (doctorId !== 'all') params.append('doctorId', doctorId);
                 if (patientId !== 'all') params.append('patientId', patientId);
                 if (status !== 'all') params.append('status', status);
                 endpoint = '/dashboard/doctor/reportes/citas/generate';
+            } else if (activeReportTab === 'historial') {
+                if (patientId !== 'all') params.append('patientId', patientId);
+                endpoint = '/dashboard/doctor/reportes/historial/generate';
             } else if (activeReportTab === 'general') {
                 if (doctorId !== 'all') params.append('doctorId', doctorId);
                 endpoint = '/dashboard/doctor/reportes/general/generate';
@@ -142,8 +147,8 @@
                     
                     {#if activeReportTab === 'paciente'}
                         <div>
-                            <h3 class="text-lg font-medium text-gray-700 mb-3">Reporte por Paciente</h3>
-                            <p class="text-gray-600 mb-3">Este reporte muestra estadísticas e historial de un paciente específico.</p>
+                            <h3 class="text-lg font-medium text-gray-700 mb-3">Reporte del Dispositivo IoT</h3>
+                            <p class="text-gray-600 mb-3">Este reporte muestra estadísticas e información del dispositivo IoT.</p>
                             
                             <div class="mb-4">
                                 <label class="block text-sm font-medium text-gray-700 mb-2" for="patientId">
@@ -219,24 +224,23 @@
                                 </div>
                             </div>
                         </div>
-                    {:else if activeReportTab === 'general'}
+                    {:else if activeReportTab === 'historial'}
                         <div>
-                            <h3 class="text-lg font-medium text-gray-700 mb-3">Reporte General</h3>
-                            <p class="text-gray-600 mb-3">Este reporte muestra estadísticas generales de la clínica.</p>
+                            <h3 class="text-lg font-medium text-gray-700 mb-3">Historial Médico</h3>
+                            <p class="text-gray-600 mb-3">Este reporte muestra el historial médico completo de un paciente.</p>
                             
-                            <!-- Filtro por doctor para estadísticas generales -->
-                            <div class="mb-4 max-w-md">
-                                <label class="block text-sm font-medium text-gray-700 mb-2" for="doctorId">
-                                    Doctor (opcional)
+                            <div class="mb-4">
+                                <label class="block text-sm font-medium text-gray-700 mb-2" for="patientId">
+                                    Paciente
                                 </label>
                                 <select 
-                                    id="doctorId"
-                                    bind:value={doctorId}
+                                    id="patientId"
+                                    bind:value={patientId}
                                     class="w-full p-2 border rounded-lg focus:border-blue-500 focus:ring focus:ring-blue-200"
                                 >
-                                    <option value="all">Todos los doctores</option>
-                                    {#each doctors as doctor}
-                                        <option value={doctor.id_dc}>{doctor.nombre} {doctor.apellido_p || ''} {doctor.apellido_m || ''}</option>
+                                    <option value="all">Selecciona un paciente</option>
+                                    {#each patients as patient}
+                                        <option value={patient.id_pc}>{patient.nombre} {patient.apellido_p || ''} {patient.apellido_m || ''}</option>
                                     {/each}
                                 </select>
                             </div>
@@ -244,10 +248,25 @@
                             <div class="text-sm text-gray-500">
                                 <p>Este reporte incluirá:</p>
                                 <ul class="list-disc pl-5 mt-2">
+                                    <li>Información personal del paciente</li>
+                                    <li>Historial completo de citas</li>
+                                    <li>Gráfico de progreso de citas</li>
+                                    <li>Datos de IoT por cita (si están disponibles)</li>
+                                    <li>Estadísticas de salud</li>
+                                </ul>
+                            </div>
+                        </div>
+                    {:else if activeReportTab === 'general'}
+                        <div>
+                            <h3 class="text-lg font-medium text-gray-700 mb-3">Reporte General</h3>
+                            <p class="text-gray-600 mb-3">Este reporte muestra estadísticas generales de la clínica.</p>
+                            
+                            <div class="text-sm text-gray-500">
+                                <p>Este reporte incluirá:</p>
+                                <ul class="list-disc pl-5 mt-2">
                                     <li>Total de citas en el período seleccionado</li>
                                     <li>Distribución por estado de citas</li>
-                                    <li>Ingresos generados</li>
-                                    <li>Estadísticas por doctor (si se selecciona "Todos los doctores")</li>
+                                    <li>Estadísticas por doctor</li>
                                     <li>Tendencias a lo largo del tiempo</li>
                                 </ul>
                             </div>

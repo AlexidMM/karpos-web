@@ -40,26 +40,34 @@
     }
     
     // Función para verificar si hay citas pendientes en una fecha específica
-    function hasAppointment(day: number): boolean {
+    function checkAppointment(day: number): { hasAppointment: boolean; isPast: boolean } {
       const dateToCheck = new Date(currentYear, currentMonth, day);
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
       
-      return appointments.some(appointment => {
+      const appointment = appointments.find(appointment => {
         const appointmentDate = new Date(appointment.date || appointment.appointment_date);
         return (
           appointmentDate.getDate() === day &&
           appointmentDate.getMonth() === currentMonth &&
-          appointmentDate.getFullYear() === currentYear &&
-          appointment.status === 'pending'
+          appointmentDate.getFullYear() === currentYear
         );
       });
+
+      return {
+        hasAppointment: !!appointment,
+        isPast: appointment ? new Date(appointment.date || appointment.appointment_date) < today : false
+      };
     }
     
     // Función para manejar el clic en un día
     function handleDayClick(day: number) {
       const selectedDate = new Date(currentYear, currentMonth, day);
+      const appointmentInfo = checkAppointment(day);
       dispatch('daySelect', {
         date: selectedDate,
-        hasAppointment: hasAppointment(day)
+        hasAppointment: appointmentInfo.hasAppointment,
+        isPast: appointmentInfo.isPast
       });
     }
     
@@ -101,9 +109,14 @@
     <div class="calendar-grid grid grid-cols-7 gap-1">
       {#each calendarDays as day}
         {#if day !== null}
+          {@const appointmentInfo = checkAppointment(day)}
           <div 
             class="day-cell h-8 w-8 rounded-full flex items-center justify-center cursor-pointer
-                  {hasAppointment(day) ? 'bg-blue-500 text-white font-semibold' : 'bg-blue-200 hover:bg-blue-300 text-blue-700'}"
+                  {appointmentInfo.hasAppointment 
+                    ? appointmentInfo.isPast 
+                      ? 'bg-gray-500 text-white font-semibold' 
+                      : 'bg-blue-500 text-white font-semibold' 
+                    : 'bg-blue-200 hover:bg-blue-300 text-blue-700'}"
             on:click={() => handleDayClick(day)}
           >
             {day}

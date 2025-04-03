@@ -49,7 +49,7 @@ export const actions: Actions = {
             }
             
             const json = await res.json();
-            const { accessToken, refreshToken, id_us } = json;
+            const { accessToken, refreshToken, userId } = json;
             
             if (!accessToken || !refreshToken) {
                 console.error('El servidor no envió tokens válidos');
@@ -81,8 +81,8 @@ export const actions: Actions = {
                 path: '/'
             });
 
-            cookies.set('id_us', id_us, {
-                httpOnly: true,
+            cookies.set('id_us', userId, {
+                httpOnly: false,
                 secure: false,
                 sameSite: 'strict',
                 expires: expirationDate,
