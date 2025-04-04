@@ -34,7 +34,7 @@ export const actions: Actions = {
                 throw error(401, "No estás autenticado");
             }
             
-            const response = await fetch('http://10.224.0.3:3001/patients/with-user', {
+            const response = await fetch('http://34.51.19.104:3001/patients/with-user', {
                 method: 'POST',
                 headers: {
                     'Authorization': `Bearer ${accessToken}`,

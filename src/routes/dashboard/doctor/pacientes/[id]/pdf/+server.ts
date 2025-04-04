@@ -14,7 +14,7 @@ export const GET: RequestHandler = async ({ fetch, params, cookies }) => {
         const patientId = params.id;
         
         // Obtener datos del paciente
-        const patientResponse = await fetch(`http://10.224.0.3:3001/patients/${patientId}`, {
+        const patientResponse = await fetch(`http://34.51.19.104:3001/patients/${patientId}`, {
             headers: {
                 'Authorization': `Bearer ${accessToken}`,
                 'Content-Type': 'application/json',
@@ -29,7 +29,7 @@ export const GET: RequestHandler = async ({ fetch, params, cookies }) => {
         const patient = patients[0];
 
         // Obtener historial médico
-        const medicalRecordsResponse = await fetch(`http://10.224.0.3:3001/medical-records`, {
+        const medicalRecordsResponse = await fetch(`http://34.51.19.104:3001/medical-records`, {
             headers: {
                 'Authorization': `Bearer ${accessToken}`,
                 'Content-Type': 'application/json',

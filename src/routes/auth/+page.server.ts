@@ -3,7 +3,7 @@ import { redirect } from '@sveltejs/kit';
 import type { Actions, PageServerLoad } from './$types';
 import { jwtDecode } from 'jwt-decode';
 
-const URI = 'http://10.224.0.3:3001/auth/login';
+const URI = 'http://34.51.19.104:3001/auth/login';
 
 export const load: PageServerLoad = async ({ cookies }) => {
     const accessToken = cookies.get('access_token');
@@ -18,7 +18,7 @@ export const load: PageServerLoad = async ({ cookies }) => {
         }
         
         // Verificar si ya estamos en la página de destino
-        const currentPath = new URL('http://localhost:3000').pathname;
+        const currentPath = new URL('http://34.51.19.104:3001/').pathname;
         if (decodedToken.role === 'doctor' && !currentPath.startsWith('/dashboard/doctor')) {
             return redirect(302, '/dashboard/doctor');
         } else if (decodedToken.role === 'patient' && !currentPath.startsWith('/dashboard/patient')) {

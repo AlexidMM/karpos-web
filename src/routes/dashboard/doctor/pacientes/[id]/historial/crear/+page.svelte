@@ -25,7 +25,7 @@
         
         
         try {
-            const response = await fetch('http://10.224.0.3:3001/medical-records', {
+            const response = await fetch('http://34.51.19.104:3001/medical-records', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

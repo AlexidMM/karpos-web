@@ -11,7 +11,7 @@ export const load: PageServerLoad = async ({ fetch, cookies }) => {
         }
         
         // Obtener lista de doctores
-        const doctorsResponse = await fetch('http://10.224.0.3:3001/doctors', {
+        const doctorsResponse = await fetch('http://34.51.19.104:3001/doctors', {
             headers: {
                 'Authorization': `Bearer ${accessToken}`,
                 'Content-Type': 'application/json'
@@ -25,7 +25,7 @@ export const load: PageServerLoad = async ({ fetch, cookies }) => {
         const doctors = await doctorsResponse.json();
         
         // Obtener lista de pacientes
-        const patientsResponse = await fetch('http://10.224.0.3:3001/patients', {
+        const patientsResponse = await fetch('http://34.51.19.104:3001/patients', {
             headers: {
                 'Authorization': `Bearer ${accessToken}`,
                 'Content-Type': 'application/json'

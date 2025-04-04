@@ -1,7 +1,7 @@
 <!-- src/routes/auth/+page.svelte -->
 <script lang="ts">
     const handleGoogleLogin = () => {
-        window.location.href = 'http://10.224.0.3:3001/auth/google/';
+        window.location.href = 'http://34.51.19.104:3001/auth/google/';
     };
 </script>
 

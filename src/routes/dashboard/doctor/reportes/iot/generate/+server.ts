@@ -36,7 +36,7 @@ export const GET: RequestHandler = async ({ url, fetch, cookies }) => {
         const patientId = url.searchParams.get('patientId');
         
         // Build API URL with filters
-        const apiUrl = new URL('http://10.224.0.3:3001/iot');
+        const apiUrl = new URL('http://34.51.19.104:3001/iot');
         if (startDate) apiUrl.searchParams.append('startDate', startDate);
         if (endDate) apiUrl.searchParams.append('endDate', endDate);
         if (patientId && patientId !== 'all') apiUrl.searchParams.append('patientId', patientId);

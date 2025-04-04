@@ -43,7 +43,7 @@ export const GET: RequestHandler = async ({ url, fetch, cookies }) => {
         }
 
         // Fetch patient data
-        const patientResponse = await fetch(`http://10.224.0.3:3001/patients/${patientId}`, {
+        const patientResponse = await fetch(`http://34.51.19.104:3001/patients/${patientId}`, {
             headers: {
                 'Authorization': `Bearer ${accessToken}`,
                 'Content-Type': 'application/json'
@@ -64,7 +64,7 @@ export const GET: RequestHandler = async ({ url, fetch, cookies }) => {
         }
 
         // Fetch patient's appointments
-        const appointmentsResponse = await fetch(`http://10.224.0.3:3001/patients/appointments/details?patientId=${patientId}`, {
+        const appointmentsResponse = await fetch(`http://34.51.19.104:3001/patients/appointments/details?patientId=${patientId}`, {
             headers: {
                 'Authorization': `Bearer ${accessToken}`,
                 'Content-Type': 'application/json'
@@ -88,7 +88,7 @@ export const GET: RequestHandler = async ({ url, fetch, cookies }) => {
                 }
 
                 console.log('Fetching IoT data for appointment:', id_ap);
-                const iotResponse = await fetch(`http://10.224.0.3:3001/iot?cita=${id_ap}`, {
+                const iotResponse = await fetch(`http://34.51.19.104:3001/iot?cita=${id_ap}`, {
                     headers: {
                         'Authorization': `Bearer ${accessToken}`,
                         'Content-Type': 'application/json'

@@ -10,7 +10,7 @@ export const load: PageServerLoad = async ({ fetch, cookies }) => {
         }
 
         // Fetch patients list
-        const patientsResponse = await fetch('http://10.224.0.3:3001/patients', {
+        const patientsResponse = await fetch('http://34.51.19.104:3001/patients', {
             headers: {
                 'Authorization': `Bearer ${accessToken}`,
                 'Content-Type': 'application/json'
@@ -24,7 +24,7 @@ export const load: PageServerLoad = async ({ fetch, cookies }) => {
         const patients = await patientsResponse.json();
 
         // Fetch appointments for all patients
-        const appointmentsResponse = await fetch('http://10.224.0.3:3001/appointments', {
+        const appointmentsResponse = await fetch('http://34.51.19.104:3001/appointments', {
             headers: {
                 'Authorization': `Bearer ${accessToken}`,
                 'Content-Type': 'application/json'
@@ -38,7 +38,7 @@ export const load: PageServerLoad = async ({ fetch, cookies }) => {
         const appointments = await appointmentsResponse.json();
 
         // Fetch IoT data for all appointments
-        const iotResponse = await fetch('http://10.224.0.3:3001/iot', {
+        const iotResponse = await fetch('http://34.51.19.104:3001/iot', {
             headers: {
                 'Authorization': `Bearer ${accessToken}`,
                 'Content-Type': 'application/json'

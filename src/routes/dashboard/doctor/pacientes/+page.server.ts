@@ -11,7 +11,7 @@ export const load: PageServerLoad = async ({ fetch, cookies }) => {
             throw error(401, "No estás autenticado");
         }
         
-        const response = await fetch('http://10.224.0.3:3001/patients', {
+        const response = await fetch('http://34.51.19.104:3001/patients', {
             headers: {
                 'Authorization': `Bearer ${accessToken}`,
                 'Content-Type': 'application/json'
@@ -53,7 +53,7 @@ export const actions = {
         }
         
         try {
-            const response = await fetch(`http://10.224.0.3:3001/patients/${patientId}`, {
+            const response = await fetch(`http://34.51.19.104:3001/patients/${patientId}`, {
                 method: 'DELETE',
                 headers: {
                     'Authorization': `Bearer ${accessToken}`,
