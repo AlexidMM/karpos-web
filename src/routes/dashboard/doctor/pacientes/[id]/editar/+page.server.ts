@@ -11,7 +11,7 @@ export async function load({ params, cookies }) {
     console.log("ID del paciente a cargar:", params.id);
 
     // Obtener paciente desde la API
-    const response = await fetch(`http://localhost:3000/patients/${params.id}`, {
+    const response = await fetch(`http://10.224.0.3:3001/patients/${params.id}`, {
         headers: {
             'Authorization': `Bearer ${accessToken}`
         }
@@ -55,7 +55,7 @@ export const actions = {
         console.log("Datos a enviar a la API:", data);
 
         try {
-            const response = await fetch(`http://localhost:3000/patients/${id}`, {
+            const response = await fetch(`http://10.224.0.3:3001/patients/${id}`, {
                 method: 'PUT',
                 headers: {
                     'Authorization': `Bearer ${accessToken}`,

@@ -23,7 +23,7 @@ export const load: PageServerLoad = async ({ fetch, cookies }) => {
         console.log('🔄 Fetching appointments data...');
         
         // Fetch appointments using the new view endpoint
-        const appointmentsResponse = await fetch('http://localhost:3000/patients/appointments/details', {
+        const appointmentsResponse = await fetch('http://10.224.0.3:3001/patients/appointments/details', {
             headers: {
                 'Authorization': `Bearer ${accessToken}`,
                 'Content-Type': 'application/json'

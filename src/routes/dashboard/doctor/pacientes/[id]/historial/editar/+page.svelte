@@ -31,7 +31,7 @@
         errorMessage = null;
         
         try {
-            const response = await fetch(`http://localhost:3000/medical-records/${medicalRecordId}`, {
+            const response = await fetch(`http://10.224.0.3:3001/medical-records/${medicalRecordId}`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',

@@ -19,7 +19,7 @@ export const GET: RequestHandler = async ({ url, fetch, cookies }) => {
         const status = url.searchParams.get('status');
         
         // Construir URL para la API con los filtros
-        let apiUrl = 'http://localhost:3000/reports/appointments';
+        let apiUrl = 'http://10.224.0.3:3001/reports/appointments';
         const queryParams = new URLSearchParams();
         
         if (startDate) queryParams.append('startDate', startDate);
@@ -47,14 +47,14 @@ export const GET: RequestHandler = async ({ url, fetch, cookies }) => {
         const appointments = await appointmentsResponse.json();
         
         // Obtener información adicional si es necesario (nombres de doctores y pacientes)
-        const doctorsResponse = await fetch('http://localhost:3000/doctors', {
+        const doctorsResponse = await fetch('http://10.224.0.3:3001/doctors', {
             headers: {
                 'Authorization': `Bearer ${accessToken}`,
                 'Content-Type': 'application/json'
             }
         });
         
-        const patientsResponse = await fetch('http://localhost:3000/patients', {
+        const patientsResponse = await fetch('http://10.224.0.3:3001/patients', {
             headers: {
                 'Authorization': `Bearer ${accessToken}`,
                 'Content-Type': 'application/json'

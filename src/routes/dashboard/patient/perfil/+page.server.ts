@@ -25,7 +25,7 @@ export const load: PageServerLoad = async ({ fetch, cookies, depends }) => {
 
         // Paso 1: Obtener el paciente asociado al id_us
         const timestamp = new Date().getTime();
-        const patientUrl = `http://localhost:3000/patients/by-user/${userId}?_t=${timestamp}`;
+        const patientUrl = `http://10.224.0.3:3001/patients/by-user/${userId}?_t=${timestamp}`;
         
         const patientResponse = await fetch(patientUrl, {
             headers: {
@@ -47,7 +47,7 @@ export const load: PageServerLoad = async ({ fetch, cookies, depends }) => {
         }
         
         // Paso 2: Obtener todas las citas
-        const appointmentsUrl = `http://localhost:3000/patients/appointments/details?_t=${timestamp}`;
+        const appointmentsUrl = `http://10.224.0.3:3001/patients/appointments/details?_t=${timestamp}`;
         
         const appointmentsResponse = await fetch(appointmentsUrl, {
             headers: {

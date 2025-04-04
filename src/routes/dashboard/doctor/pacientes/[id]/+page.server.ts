@@ -29,7 +29,7 @@ export const load: PageServerLoad = async ({ fetch, params, cookies }) => {
         console.log('🔄 Fetching patient data for ID:', patientId);
         
         // Usamos el endpoint que utiliza la vista paciendatos
-        const response = await fetch(`http://localhost:3000/patients/datos/all`, {
+        const response = await fetch(`http://10.224.0.3:3001/patients/datos/all`, {
             headers: {
                 'Authorization': `Bearer ${accessToken}`,
                 'Content-Type': 'application/json'

@@ -33,7 +33,7 @@ export const load: PageServerLoad = async ({ fetch, cookies, depends }) => {
         
         // Paso 1: Obtener el paciente asociado al id_us
         const timestamp = new Date().getTime();
-        const patientUrl = `http://localhost:3000/patients/by-user/${userId}?_t=${timestamp}`;
+        const patientUrl = `http://10.224.0.3:3001/patients/by-user/${userId}?_t=${timestamp}`;
         console.log('🔍 Debug - Patient API URL:', patientUrl);
         
         const patientResponse = await fetch(patientUrl, {
@@ -72,7 +72,7 @@ export const load: PageServerLoad = async ({ fetch, cookies, depends }) => {
         console.log('🔄 Fetching appointments for patient:', patient.id_pc);
         
         // Paso 2: Obtener las citas usando la vista
-        const appointmentsUrl = `http://localhost:3000/patients/appointments/details?_t=${timestamp}`;
+        const appointmentsUrl = `http://10.224.0.3:3001/patients/appointments/details?_t=${timestamp}`;
         console.log('🔍 Debug - Appointments API URL:', appointmentsUrl);
         
         const appointmentsResponse = await fetch(appointmentsUrl, {

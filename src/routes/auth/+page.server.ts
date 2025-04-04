@@ -3,7 +3,7 @@ import { redirect } from '@sveltejs/kit';
 import type { Actions, PageServerLoad } from './$types';
 import { jwtDecode } from 'jwt-decode';
 
-const URI = 'http://localhost:3000/auth/login';
+const URI = 'http://10.224.0.3:3001/auth/login';
 
 export const load: PageServerLoad = async ({ cookies }) => {
     const accessToken = cookies.get('access_token');
